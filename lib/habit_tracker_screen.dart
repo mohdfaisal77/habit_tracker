@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'add_habit_screen.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'add_habit_screen.dart';
 class HabitTrackerScreen extends StatefulWidget {
   final String username;
 
@@ -19,12 +24,25 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
   @override
   void initState() {
     super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('name') ?? widget.username;
+      selectedHabitsMap = Map<String, String>.from(
+          jsonDecode(prefs.getString('selectedHabitsMap') ?? '{}'));
+      completedHabitsMap = Map<String, String>.from(
+          jsonDecode(prefs.getString('completedHabitsMap') ?? '{}'));
+    });
   }
 
   Future<void> _saveHabits() async {
-    //save habits to preferences in the future
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedHabitsMap', jsonEncode(selectedHabitsMap));
+    await prefs.setString('completedHabitsMap', jsonEncode(completedHabitsMap));
   }
-
   Color _getColorFromHex(String hexColor) {
     hexColor = hexColor.replaceAll('#', '');
     if (hexColor.length == 6) {
@@ -48,6 +66,39 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        backgroundColor: Colors.white,
+        child: Column(
+          children: [
+            Container(
+              height: 160,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(30),
+                ),
+              ),
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(left: 20, top: 50),
+              child: const Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            _drawerItem(icon: Icons.settings, label: 'Configure'),
+            _drawerItem(icon: Icons.person, label: 'Personal Info'),
+            _drawerItem(icon: Icons.insert_chart, label: 'Reports'),
+            _drawerItem(icon: Icons.notifications, label: 'Notifications'),
+            _drawerItem(icon: Icons.logout, label: 'Sign Out'),
+          ],
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.blue.shade700,
         title: Text(
@@ -58,7 +109,6 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        automaticallyImplyLeading: true,
       ),
       body: Column(
         children: [
@@ -188,13 +238,16 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
             MaterialPageRoute(
               builder: (context) => AddHabitScreen(),
             ),
-          );
+          ).then((_) {
+            _loadUserData(); // Reload data after returning
+          });
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue.shade700,
         tooltip: 'Add Habits',
       )
           : null,
+
     );
   }
 
@@ -220,5 +273,20 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
         ),
       ),
     );
+
   }
+  Widget _drawerItem({required IconData icon, required String label}) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.black),
+      title: Text(
+        label,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+      onTap: () {
+        // Add navigation or functionality here
+        Navigator.pop(context); // Close drawer
+      },
+    );
+  }
+
 }
