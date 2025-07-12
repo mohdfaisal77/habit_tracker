@@ -66,39 +66,80 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        backgroundColor: Colors.white,
-        child: Column(
-          children: [
-            Container(
-              height: 160,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(30),
-                ),
-              ),
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(left: 20, top: 50),
-              child: const Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+      drawer:  Drawer(
+    child: ListView(
+    padding: EdgeInsets.zero,
+      children: [
+        DrawerHeader(
+          decoration: BoxDecoration(
+            color: Colors.blue.shade700,
+          ),
+          child: Text(
+            'Menu',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 20),
-            _drawerItem(icon: Icons.settings, label: 'Configure'),
-            _drawerItem(icon: Icons.person, label: 'Personal Info'),
-            _drawerItem(icon: Icons.insert_chart, label: 'Reports'),
-            _drawerItem(icon: Icons.notifications, label: 'Notifications'),
-            _drawerItem(icon: Icons.logout, label: 'Sign Out'),
-          ],
+          ),
         ),
-      ),
+        ListTile(
+          leading: Icon(Icons.settings),
+          title: Text('Configure'),
+        ),
+        ListTile(
+          leading: Icon(Icons.person),
+          title: Text('Personal Info'),
+        ),
+        ListTile(
+          leading: Icon(Icons.analytics),
+          title: Text('Reports'),
+        ),
+        ListTile(
+          leading: Icon(Icons.notifications),
+          title: Text('Notifications'),
+        ),
+        ListTile(
+          leading: Icon(Icons.logout),
+          title: Text('Sign Out'),
+        ),
+      ],
+    ),
+    ),
+      // Drawer(
+      //   backgroundColor: Colors.white,
+      //   child: Column(
+      //     children: [
+      //       Container(
+      //         height: 160,
+      //         width: double.infinity,
+      //         decoration: const BoxDecoration(
+      //           color: Colors.blue,
+      //           borderRadius: BorderRadius.only(
+      //             bottomRight: Radius.circular(30),
+      //           ),
+      //         ),
+      //         alignment: Alignment.centerLeft,
+      //         padding: const EdgeInsets.only(left: 20, top: 50),
+      //         child: const Text(
+      //           'Menu',
+      //           style: TextStyle(
+      //             color: Colors.white,
+      //             fontSize: 26,
+      //             fontWeight: FontWeight.bold,
+      //           ),
+      //         ),
+      //       ),
+      //       const SizedBox(height: 20),
+      //       _drawerItem(icon: Icons.settings, label: 'Configure'),
+      //       _drawerItem(icon: Icons.person, label: 'Personal Info'),
+      //       _drawerItem(icon: Icons.insert_chart, label: 'Reports'),
+      //       _drawerItem(icon: Icons.notifications, label: 'Notifications'),
+      //       _drawerItem(icon: Icons.logout, label: 'Sign Out'),
+      //     ],
+      //   ),
+      // ),
+
       appBar: AppBar(
         backgroundColor: Colors.blue.shade700,
         title: Text(
@@ -275,18 +316,18 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
     );
 
   }
-  Widget _drawerItem({required IconData icon, required String label}) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.black),
-      title: Text(
-        label,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-      ),
-      onTap: () {
-        // Add navigation or functionality here
-        Navigator.pop(context); // Close drawer
-      },
-    );
-  }
+  // Widget _drawerItem({required IconData icon, required String label}) {
+  //   return ListTile(
+  //     leading: Icon(icon, color: Colors.black),
+  //     title: Text(
+  //       label,
+  //       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+  //     ),
+  //     onTap: () {
+  //       // Add navigation or functionality here
+  //       Navigator.pop(context); // Close drawer
+  //     },
+  //   );
+  // }
 
 }
