@@ -1,12 +1,14 @@
-import 'package:flutter/material.dart';
-
-import 'add_habit_screen.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'add_habit_screen.dart';
+import 'login_screen.dart';
+import 'notifications_screen.dart';
+import 'personal_info_screen.dart';
+import 'reports_screen.dart';
+
 class HabitTrackerScreen extends StatefulWidget {
   final String username;
 
@@ -43,6 +45,7 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
     await prefs.setString('selectedHabitsMap', jsonEncode(selectedHabitsMap));
     await prefs.setString('completedHabitsMap', jsonEncode(completedHabitsMap));
   }
+
   Color _getColorFromHex(String hexColor) {
     hexColor = hexColor.replaceAll('#', '');
     if (hexColor.length == 6) {
@@ -66,80 +69,6 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer:  Drawer(
-    child: ListView(
-    padding: EdgeInsets.zero,
-      children: [
-        DrawerHeader(
-          decoration: BoxDecoration(
-            color: Colors.blue.shade700,
-          ),
-          child: Text(
-            'Menu',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        ListTile(
-          leading: Icon(Icons.settings),
-          title: Text('Configure'),
-        ),
-        ListTile(
-          leading: Icon(Icons.person),
-          title: Text('Personal Info'),
-        ),
-        ListTile(
-          leading: Icon(Icons.analytics),
-          title: Text('Reports'),
-        ),
-        ListTile(
-          leading: Icon(Icons.notifications),
-          title: Text('Notifications'),
-        ),
-        ListTile(
-          leading: Icon(Icons.logout),
-          title: Text('Sign Out'),
-        ),
-      ],
-    ),
-    ),
-      // Drawer(
-      //   backgroundColor: Colors.white,
-      //   child: Column(
-      //     children: [
-      //       Container(
-      //         height: 160,
-      //         width: double.infinity,
-      //         decoration: const BoxDecoration(
-      //           color: Colors.blue,
-      //           borderRadius: BorderRadius.only(
-      //             bottomRight: Radius.circular(30),
-      //           ),
-      //         ),
-      //         alignment: Alignment.centerLeft,
-      //         padding: const EdgeInsets.only(left: 20, top: 50),
-      //         child: const Text(
-      //           'Menu',
-      //           style: TextStyle(
-      //             color: Colors.white,
-      //             fontSize: 26,
-      //             fontWeight: FontWeight.bold,
-      //           ),
-      //         ),
-      //       ),
-      //       const SizedBox(height: 20),
-      //       _drawerItem(icon: Icons.settings, label: 'Configure'),
-      //       _drawerItem(icon: Icons.person, label: 'Personal Info'),
-      //       _drawerItem(icon: Icons.insert_chart, label: 'Reports'),
-      //       _drawerItem(icon: Icons.notifications, label: 'Notifications'),
-      //       _drawerItem(icon: Icons.logout, label: 'Sign Out'),
-      //     ],
-      //   ),
-      // ),
-
       appBar: AppBar(
         backgroundColor: Colors.blue.shade700,
         title: Text(
@@ -149,6 +78,87 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
+        ),
+        automaticallyImplyLeading: true,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue.shade700,
+              ),
+              child: const Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Configure'),
+              onTap: () async {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddHabitScreen(),
+                  ),
+                ).then((updatedHabits) {
+                  _loadUserData(); // Reload data after returning
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Personal Info'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PersonalInfoScreen()),
+                ).then((_) {
+                  _loadUserData(); // Reload data after returning
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.analytics),
+              title: const Text('Reports'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ReportsScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.notifications),
+              title: Text('Notifications'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationsScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Sign Out'),
+              onTap: () {
+                _signOut(context);
+              },
+            ),
+          ],
         ),
       ),
       body: Column(
@@ -213,7 +223,7 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
           ),
           const Divider(),
           const Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Text(
               'Done ✅🎉',
               style: TextStyle(
@@ -251,7 +261,7 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
                   background: Container(
                     color: Colors.red,
                     alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
                     child: const Row(
                       children: [
                         Icon(Icons.undo, color: Colors.white),
@@ -283,12 +293,21 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
             _loadUserData(); // Reload data after returning
           });
         },
-        child: Icon(Icons.add),
         backgroundColor: Colors.blue.shade700,
         tooltip: 'Add Habits',
+        child: const Icon(Icons.add),
       )
           : null,
+    );
+  }
 
+  void _signOut(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
     );
   }
 
@@ -314,20 +333,5 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
         ),
       ),
     );
-
   }
-  // Widget _drawerItem({required IconData icon, required String label}) {
-  //   return ListTile(
-  //     leading: Icon(icon, color: Colors.black),
-  //     title: Text(
-  //       label,
-  //       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-  //     ),
-  //     onTap: () {
-  //       // Add navigation or functionality here
-  //       Navigator.pop(context); // Close drawer
-  //     },
-  //   );
-  // }
-
 }
