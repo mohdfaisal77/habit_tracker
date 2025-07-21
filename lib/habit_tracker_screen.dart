@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'add_habit_screen.dart';
+import 'detail_screen.dart';
 import 'login_screen.dart';
 import 'notifications_screen.dart';
 import 'personal_info_screen.dart';
@@ -311,14 +312,26 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
     );
   }
 
-  Widget _buildHabitCard(String title, Color color,
-      {bool isCompleted = false}) {
+  Widget _buildHabitCard(String title, Color color, {bool isCompleted = false}) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       color: color,
       child: Container(
-        height: 60, // Adjust the height for thicker cards.
+        height: 60,
         child: ListTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailScreen(
+                  item: {
+                    'title': title,
+                    'description': 'This is the habit description for "$title".'
+                  },
+                ),
+              ),
+            );
+          },
           title: Text(
             title.toUpperCase(),
             style: const TextStyle(
@@ -334,4 +347,5 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen> {
       ),
     );
   }
+
 }
