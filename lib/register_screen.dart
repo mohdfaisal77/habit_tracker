@@ -17,6 +17,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
   double _age = 25; // Default age set to 25
   String _country = 'United States';
   List<String> _countries = [];
@@ -161,7 +162,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _buildInputField(_nameController, 'Name', Icons.person),
                 SizedBox(height: 10),
                 _buildInputField(
-                    _usernameController, 'Username', Icons.alternate_email),
+                    _usernameController, 'Email', Icons.alternate_email),
+                SizedBox(height: 10),
+                _buildInputField(
+                    _passwordController, 'Password', Icons.password),
+                SizedBox(height: 10),
+               InkWell(
+                 onTap: (){
+                   Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+                 },
+                 child:  Text('Already have an Account? Login',
+                     style: TextStyle(color: Colors.black, fontSize: 18)),
+               ),
                 SizedBox(height: 10),
                 Text('Age: ${_age.round()}',
                     style: TextStyle(color: Colors.white, fontSize: 18)),
