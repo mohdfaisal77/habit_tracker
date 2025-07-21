@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: InputDecoration(
                       prefixIcon:
                       Icon(Icons.email, color: Colors.blue.shade700),
-                      hintText: 'Enter Username',
+                      hintText: 'Enter Username/Email',
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 15),
